@@ -1,0 +1,217 @@
+--By Bank TV, Therapist, Kavo, 
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Mortem Metallum [ALPHA] V2", "DarkTheme")
+local Tab = Window:NewTab("Nuke")
+local TabTeleporting = Window:NewTab("Teleporting")
+local TabCredits = Window:NewTab("Credits")
+local TabCrossbow = Window:NewTab("Minigun")
+local Section = Tab:NewSection("Duping")
+local Section2 = Tab:NewSection("Toggles")
+local SectionTeleporting = TabTeleporting:NewSection("Teleporting")
+local SectionCredits = TabCredits:NewSection("Bank TV - Scripter")
+local SectionCredits = TabCredits:NewSection("Therapist - Scripter / UI Editor")
+local SectionCredits = TabCredits:NewSection("Kavo - UI Design")
+local SectionCredits = TabCredits:NewSection("NOTE: This is a modification of the minigun script.")
+local SectionCrossbow = TabCrossbow:NewSection("Step 1")
+local colors = {
+    SchemeColor = Color3.fromRGB(0,255,255),
+    Background = Color3.fromRGB(0, 0, 0),
+    Header = Color3.fromRGB(0, 0, 0),
+    TextColor = Color3.fromRGB(255,255,255),
+    ElementColor = Color3.fromRGB(20, 20, 20)
+}
+
+Section:NewButton("Dupe Grenades", "You can change the amount duped on Line 14.", function()
+    local plr = game.Players.LocalPlayer
+local dupe = {}
+
+for i=1,200 do table.insert(dupe,tonumber(12)) end -- IF YOU WANT MORE THAN 200 FOR BOTH C4 AND GRENADES, CHANGE "200"
+
+settings().Network.IncomingReplicationLag = math.huge
+wait()
+for i,v in pairs(dupe) do
+   local h = v
+   
+   local args = {
+       [1] = h,
+       [2] = "0:0:0:0"
+   }game:GetService("ReplicatedStorage").Item:FireServer(unpack(args))
+end
+wait(0.5)
+settings().Network.IncomingReplicationLag = 0
+wait(#dupe/19)
+for i,v in pairs(plr.Backpack:GetChildren()) do
+   if v.Name == "Crossbow" or v.Name == "Fire bomb" or v.Name == "C4" or v.Name == "Bear trap" then
+       v:Destroy()
+   end
+end
+end)
+
+Plr = {}
+for i,v in pairs(game:GetService("Players"):GetChildren()) do
+    table.insert(Plr,v.Name) 
+end
+local drop = SectionTeleporting:NewDropdown("Select Player", "Click to open the dropdown menu.", Plr, function(t)
+   PlayerTP = t
+end)
+
+SectionTeleporting:NewToggle("Auto TP", "Repeatedly TPs to selected user when you spawn in.", function(t)
+_G.TPPlayer = t
+while _G.TPPlayer do wait()
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players[PlayerTP].Character.HumanoidRootPart.CFrame
+end
+end)
+
+Section2:NewButton("Fire Grenades", "Throws grenade at a rapid pace.", function()
+    local player = game.Players.LocalPlayer
+local char = player.Character
+local backpack = player:WaitForChild("Backpack")
+
+for _, item in pairs(backpack:GetChildren()) do
+	if item.Name == "Grenade" then
+		item.Parent = char
+		wait(0.5)
+		mouse1click()
+	end
+end
+
+end)
+
+Section:NewButton("Dupe C4", "You can change the amount duped on Line 14.", function()
+    local plr = game.Players.LocalPlayer
+local dupe = {}
+
+for i=1,200 do table.insert(dupe,tonumber(12)) end -- IF YOU WANT MORE THAN 80 AMMO, CHANGE THE (80) TO WHATEVER NUMBER
+
+settings().Network.IncomingReplicationLag = math.huge
+wait()
+for i,v in pairs(dupe) do
+   local h = v
+   
+   local args = {
+       [1] = h,
+       [2] = "0:0:0:0"
+   }game:GetService("ReplicatedStorage").Item:FireServer(unpack(args))
+end
+wait(0.5)
+settings().Network.IncomingReplicationLag = 0
+wait(#dupe/19)
+for i,v in pairs(plr.Backpack:GetChildren()) do
+   if v.Name == "Crossbow" or v.Name == "Fire bomb" or v.Name == "Grenade" or v.Name == "Bear trap" then
+       v:Destroy()
+   end
+end
+end)
+
+Section2:NewButton("Fire C4", "Plants C4 at a rapid pace.", function()
+    local player = game.Players.LocalPlayer
+local char = player.Character
+local backpack = player:WaitForChild("Backpack")
+
+for _, item in pairs(backpack:GetChildren()) do
+	if item.Name == "C4" then
+		item.Parent = char
+		wait(0.01)
+		mouse1click()
+	end
+end
+
+end)
+
+SectionCrossbow:NewButton("Dupe Crossbows", "Execute this while in the select weapon menu.", function()
+    local plr = game.Players.LocalPlayer
+local dupe = {}
+
+for i=1,80 do table.insert(dupe,tonumber(12)) end -- IF YOU WANT MORE THAN 80 AMMO, CHANGE THE (80) TO WHATEVER NUMBER
+
+settings().Network.IncomingReplicationLag = math.huge
+wait()
+for i,v in pairs(dupe) do
+   local h = v
+   
+   local args = {
+       [1] = h,
+       [2] = "0:0:0:0"
+   }game:GetService("ReplicatedStorage").Item:FireServer(unpack(args))
+end
+wait(0.5)
+settings().Network.IncomingReplicationLag = 0
+wait(#dupe/19)
+for i,v in pairs(plr.Backpack:GetChildren()) do
+   if v.Name == "C4" or v.Name == "Fire bomb" or v.Name == "Grenade" or v.Name == "Bear trap" then
+       v:Destroy()
+   end
+end
+end)
+local SectionCrossbow = TabCrossbow:NewSection("Step 2")
+SectionCrossbow:NewButton("Minigun Crossbows", "Execute this ONCE", function()
+    local plr = game.Players.LocalPlayer
+local us = game:GetService("UserInputService")
+local m = plr:GetMouse()
+
+-- T: minigun
+-- G: reload all
+-- V: shoot all
+-- C: shoot 3 at once (insta-kill bodyshot)
+
+local gunning = false
+us.InputBegan:Connect(function(key,pro)
+   if not pro then
+       if key.KeyCode == Enum.KeyCode.T then
+           gunning = not gunning
+           
+           if gunning then
+               for i,v in pairs(plr.Backpack:GetChildren()) do
+                   if v:FindFirstChild("Reloaded") and v.Reloaded.Value then
+                       if not gunning then return end
+                       
+                       plr.Character.Humanoid:EquipTool(v)
+                       mouse1click()
+                       wait()
+                   end
+               end
+           end
+       elseif key.KeyCode == Enum.KeyCode.G then
+           plr.Character.Humanoid:UnequipTools()
+           wait()
+           for i,v in pairs(plr.Backpack:GetChildren()) do
+               if v:FindFirstChild("Reloaded") and v.Reloaded.Value == false then
+                   v.Parent = plr.Character
+               end
+           end
+           wait(0.05)
+           mouse1click()
+       elseif key.KeyCode == Enum.KeyCode.V then
+           plr.Character.Humanoid:UnequipTools()
+           wait()
+           for i,v in pairs(plr.Backpack:GetChildren()) do
+               if v:FindFirstChild("Reloaded") and v.Reloaded.Value then
+                   v.Parent = plr.Character
+               end
+           end
+           wait(0.05)
+           mouse1click()
+       elseif key.KeyCode == Enum.KeyCode.C then
+           plr.Character.Humanoid:UnequipTools()
+           wait(0.05)
+           local h = 0
+           for i,v in pairs(plr.Backpack:GetChildren()) do
+               if v:FindFirstChild("Reloaded") and v.Reloaded.Value then
+                   h = h + 1
+                   if h > 3 then
+                       break
+                   else
+                       v.Parent = plr.Character
+                       mouse1click()
+                   end
+               end
+           end
+       end
+   end
+end)
+end)
+SectionCrossbow:NewLabel("Key Controls")
+SectionCrossbow:NewLabel("T: toggle minigun")
+SectionCrossbow:NewLabel("G: reload all crossbows (use if you cant shoot)")
+SectionCrossbow:NewLabel("C: shoot 3 at once (insta-kills even when bodyshot)")
+SectionCrossbow:NewLabel("V: shoot all at once (loud, reload after)")
