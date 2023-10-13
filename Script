@@ -5,7 +5,7 @@ local TabTeleporting = Window:NewTab("Teleporting")
 local TabCredits = Window:NewTab("Credits")
 local TabCrossbow = Window:NewTab("Minigun")
 local TabMisc = Window:NewTab("Miscellaneous")
-local TabUI = Window:NewTab("Miscellaneous")
+local TabUI = Window:NewTab("UI Settings")
 local Section = Tab:NewSection("Duping")
 local Section2 = Tab:NewSection("Toggles")
 local Section3 = TabMisc:NewSection("Stuff")
@@ -23,6 +23,9 @@ local colors = {
     TextColor = Color3.fromRGB(255, 255, 255),
     ElementColor = Color3.fromRGB(20, 20, 20)
 }
+
+-- variables --
+local running = false
 
 Section:NewButton("Dupe Grenades", "You can change the amount duped on Line 14.", function()
     local plr = game.Players.LocalPlayer
@@ -231,18 +234,27 @@ SectionCrossbow2:NewLabel("G: reload all crossbows (use if you cant shoot)")
 SectionCrossbow2:NewLabel("C: shoot 3 at once (insta-kills even when bodyshot)")
 SectionCrossbow2:NewLabel("V: shoot all at once (loud, reload after)")
 
-Section3:NewButton("Make Everyone Run", "Makes everyone run, really annoying.", function()
-    while task.wait() do
-   		for _, Model in pairs(workspace.PlayersCharacters:GetChildren()) do
-      		if Model.ClassName == "Model" and Model:FindFirstChild("Runscript") then
-         	Model.Runscript.run:FireServer(true)
-      	end
-   	end
-   wait()  -- Add a small delay between iterations (adjust as needed)
-end
-
-SectionUI:NewKeybind("Change UI Keybind", "Default is RightShift", Enum.KeyCode.RightShift, function()
+SectionUI:NewKeybind("Change UI Keybind", "Default is Z", Enum.KeyCode.Z, function()
 	Library:ToggleUI()
 end)
 
+Section3:NewToggle("Make Everyone Run", "Makes everyone run, really annoying.", function(state)
+    if state then
+        running = true
+    else
+        running = false
+    end
 end)
+
+coroutine.wrap(function()
+    while true do
+        if running then
+            for _, Model in pairs(workspace.PlayersCharacters:GetChildren()) do
+                if Model.ClassName == "Model" and Model:FindFirstChild("Runscript") then
+                    Model.Runscript.run:FireServer(true)
+                end
+            end
+        end
+        wait()
+    end
+end)()
